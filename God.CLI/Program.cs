@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Autofac;
 using System.Threading.Tasks;
 
 namespace God.CLI {
   class Program {
     static async Task Main(string[] args) {
-      await God.CLI.ConsoleFramework.Factory.GetInstance().Process(args);
+      await God.CLI.Framework.Setup.Get<Application>().Resolve<Application>().Run(args);     
     }
   }
 }

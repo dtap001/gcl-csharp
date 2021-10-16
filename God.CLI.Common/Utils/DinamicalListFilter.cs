@@ -1,28 +1,34 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using God.CLI.Common.Services.Console;
 
 namespace God.CLI.Common {
   public class DinamicalListFilter {
-    List<SelectionOption> _options;
 
-    public DinamicalListFilter(List<string> content) {
-      _options =
+    IConsoleIO consoleIO;
+
+    public DinamicalListFilter(IConsoleIO consoleIO) {
+      this.consoleIO = consoleIO;
+    }
+
+    List<SelectionOption> _options;
+    
+    public string Filter(List<string> content) {
+       _options =
           content
               .Select(x =>
                   new SelectionOption() { IsSelected = false, Value = x })
               .ToList();
       _options.First().IsSelected = true;
-    }
 
-    public string Filter() {
       string filter = string.Empty;
       var filteredList = new List<SelectionOption>(_options);
       RefreshStatus(filteredList, filter);
 
       ConsoleKeyInfo keyinfo;
       do {
-        keyinfo = Console.ReadKey();
+        keyinfo = consoleIO.ReadKey();
 
         if (keyinfo.Key == ConsoleKey.Backspace) {
           filter =
@@ -103,13 +109,13 @@ namespace God.CLI.Common {
         List<SelectionOption> options,
         string currentFilter
     ) {
-      System.Console.Clear();
+      consoleIO.Clear();
       System
           .Console
           .WriteLine(string
               .Join('\n', options.Select(x => x.ToString())));
-      System.Console.WriteLine("================================\n");
-      System.Console.Write($":{currentFilter}");
+      consoleIO.WriteLine("================================\n");
+      consoleIO.Write($":{currentFilter}");
     }
   }
 
