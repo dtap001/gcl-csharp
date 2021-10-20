@@ -7,19 +7,17 @@ namespace God.CLI.Common {
     private const int BOTTOM_PLACEHOLDER_HEIGHT = 2;
     private bool isInit = true;
     private IConsoleIO console;
-    private List<SelectionItem> items;
     private int previouslyDrawnChunkIndex = -1;
-    public SelectionCanvas(IConsoleIO console, List<SelectionItem> items) {
+    public SelectionCanvas(IConsoleIO console) {
       this.console = console;
-      this.items = items;
+
     }
 
-    public void Drawn() {
+    public void Drawn(List<SelectionItem> items, string currentFilter) {
       var containerHeight = console.GetHeight();
       var chunkSize = (containerHeight - BOTTOM_PLACEHOLDER_HEIGHT);
       var chunkCount = items.Count / chunkSize;
       var currentSelectedItemIndex = items.IndexOf(items.Where(x => x.IsSelectedCurrently).ToList().First());
-      var previouslySelectedItemIndex = items.IndexOf(items.Where(x => x.IsSelectedPreviously).ToList().First());
 
       var currentSelectedItemChunkStartIndex = 0;
       for (int currentChunkStartIndex = 0; currentChunkStartIndex >= items.Count; currentChunkStartIndex = currentChunkStartIndex + chunkSize) {
@@ -31,14 +29,22 @@ namespace God.CLI.Common {
       }
 
       var currentSelectedItemChunkEndIndex = currentSelectedItemChunkStartIndex + chunkSize;
-      var itemsForCurrentChunk = items.GetRange(currentSelectedItemChunkStartIndex, chunkSize);
-      var selectedItemIndexInChunk = itemsForCurrentChunk.IndexOf(itemsForCurrentChunk.Where(x => x.IsSelectedCurrently).ToList().First());
+      var itemCountForChunk = chunkSize;
+      //we have fewer items then the current chunksize
+      if (currentSelectedItemChunkEndIndex > items.Count - 1) {
+        itemCountForChunk = (items.Count - currentSelectedItemChunkStartIndex);
+      }
 
-      var isMovingDown = items[currentSelectedItemIndex - 1].IsSelectedCurrently != items[currentSelectedItemIndex - 1].IsSelectedPreviously;
-      var isMovingUp = items[currentSelectedItemIndex + 1].IsSelectedCurrently != items[currentSelectedItemIndex + 1].IsSelectedPreviously;
+      var itemsForCurrentChunk = items.GetRange(currentSelectedItemChunkStartIndex, itemCountForChunk);
+      var selectedItemIndexInChunk = itemsForCurrentChunk.IndexOf(itemsForCurrentChunk.Where(x => x.IsSelectedCurrently).ToList().First());
 
       var isOnChunkStartBorder = currentSelectedItemIndex == currentSelectedItemChunkStartIndex;
       var isOnChunkEndBorder = currentSelectedItemIndex == currentSelectedItemChunkEndIndex;
+
+      var isMovingDown = !isOnChunkStartBorder && items[currentSelectedItemIndex - 1].IsSelectedCurrently != items[currentSelectedItemIndex - 1].IsSelectedPreviously;
+      var isMovingUp = !isOnChunkEndBorder && items[currentSelectedItemIndex + 1].IsSelectedCurrently != items[currentSelectedItemIndex + 1].IsSelectedPreviously;
+
+
 
       var needFullRedrawn = false;
       if (isOnChunkStartBorder && isMovingDown) {
