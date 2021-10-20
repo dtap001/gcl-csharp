@@ -12,19 +12,18 @@ namespace God.CLI.Common {
       this.consoleIO = consoleIO;
     }
 
-    List<SelectionOption> _options;
-    
-    public string Filter(List<string> content) {
-       _options =
-          content
-              .Select(x =>
-                  new SelectionOption() { IsSelected = false, Value = x })
-              .ToList();
-      _options.First().IsSelected = true;
+    List<SelectionItem> _options;
 
+    public string Filter(List<string> content) {
+      _options =
+         content
+             .Select(x =>
+                 new SelectionItem() { IsSelectedCurrently = false, Value = x })
+             .ToList();
+      
       string filter = string.Empty;
-      var filteredList = new List<SelectionOption>(_options);
-      RefreshStatus(filteredList, filter);
+      var filteredList = new List<SelectionItem>(_options);
+      RefreshStatus(ConsoleKey.Spacebar, filteredList, filter);
 
       ConsoleKeyInfo keyinfo;
       do {
@@ -54,31 +53,31 @@ namespace God.CLI.Common {
           MoveSelectedDown(filteredList);
         }
 
-        RefreshStatus(filteredList, filter);
+        RefreshStatus(keyinfo.Key, filteredList, filter);
       }
       while (keyinfo.Key != ConsoleKey.Enter);
 
       return filteredList.First().Value;
     }
 
-    private void MoveSelectedUp(List<SelectionOption> options) {
+    private void MoveSelectedUp(List<SelectionItem> options) {
       var selected =
-          options.Where(x => x.IsSelected).ToList().FirstOrDefault();
+          options.Where(x => x.IsSelectedCurrently).ToList().FirstOrDefault();
       var index = options.IndexOf(selected);
 
-      selected.IsSelected = false;
+      selected.IsSelectedCurrently = false;
 
       int indexToChange = index - 1;
       if (index == 0) {
         indexToChange = options.Count - 1;
       }
 
-      options[indexToChange].IsSelected = true;
+      options[indexToChange].IsSelectedCurrently = true;
     }
 
-    private void MoveSelectedDown(List<SelectionOption> options) {
+    private void MoveSelectedDown(List<SelectionItem> options) {
       var selected =
-          options.Where(x => x.IsSelected).ToList().FirstOrDefault();
+          options.Where(x => x.IsSelectedCurrently).ToList().FirstOrDefault();
       var index = options.IndexOf(selected);
 
       selected.IsSelected = false;
@@ -88,11 +87,11 @@ namespace God.CLI.Common {
         indexToChange = 0;
       }
 
-      options[indexToChange].IsSelected = true;
+      options[indexToChange].IsSelectedCurrently = true;
     }
 
-    private void EnsureHasChecked(List<SelectionOption> options) {
-      var selected = options.Where(x => x.IsSelected).ToList();
+    private void EnsureHasChecked(List<SelectionItem> options) {
+      var selected = options.Where(x => x.IsSelectedCurrently).ToList();
 
       if (selected.Count == 1) {
         return;
@@ -102,38 +101,30 @@ namespace God.CLI.Common {
         options[index].IsSelected = false;
         return;
       }
-      options.First().IsSelected = true;
+      options.First().IsSelectedCurrently = true;
     }
 
     private void RefreshStatus(
-        List<SelectionOption> options,
+        ConsoleKey lastKey,
+        List<SelectionItem> options,
         string currentFilter
     ) {
-      consoleIO.Clear();
-      System
+      if (lastKey != ConsoleKey.UpArrow && lastKey != ConsoleKey.DownArrow) {
+        consoleIO.Clear();
+        System
           .Console
           .WriteLine(string
               .Join('\n', options.Select(x => x.ToString())));
-      consoleIO.WriteLine("================================\n");
-      consoleIO.Write($":{currentFilter}");
-    }
-  }
-
-  class SelectionOption {
-    public bool IsSelected { get; set; }
-
-    public string Value { get; set; }
-
-    public override string ToString() {
-      var result = string.Empty;
-      if (IsSelected) {
-        result += "[*] ";
+        consoleIO.WriteLine($"================================");
+        consoleIO.Write($":{currentFilter}");
       }
       else {
-        result += "[ ] ";
+        var maxHeight = System.Console.GetCursorPosition().Top;
+        var sliceCount = options.Count / maxHeight;
+        
       }
-      result += Value;
-      return result;
     }
   }
+
+ 
 }
