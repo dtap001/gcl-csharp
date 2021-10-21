@@ -50,9 +50,21 @@ namespace God.CLI.Common {
       items[originalIndex + 1].IsSelectedCurrently = true;
     }
 
-    public void FilterNow(char newChar) {
+    public void AddToFilter(char newChar) {
       filter += newChar;
+    }
+
+    public void FilterNow() {
+      if (this.items.Count == 0) { return; }
+
+      foreach (var item in items) {
+        item.IsSelectedPreviously = false;
+        item.IsSelectedCurrently = false;
+      }
       this.items = originalItems.Where(x => x.Value.Contains(filter)).ToList();
+      if (items.Where(i => i.IsSelectedCurrently).ToList().Count == 0) {
+        items.First().IsSelectedCurrently = true;
+      }
     }
 
     public void BackspaceFilter() {

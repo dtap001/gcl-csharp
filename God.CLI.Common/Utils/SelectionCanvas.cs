@@ -11,7 +11,15 @@ namespace God.CLI.Common {
       this.console = console;
     }
 
+    public void Reset() {
+      isInit = true;
+    }
+
     public void Drawn(List<SelectionItem> items, string currentFilter, Change change) {
+      if (items.Count == 0) {
+        console.Clear();
+        return;
+      }
       var containerHeight = console.GetHeight();
       var chunkSize = (containerHeight - BOTTOM_PLACEHOLDER_HEIGHT);
       var chunkCount = items.Count / chunkSize;
@@ -62,6 +70,7 @@ namespace God.CLI.Common {
     }
 
     private void Redrawn(List<SelectionItem> items) {
+      console.Clear();
       foreach (var item in items) {
         console.WriteLine(GetSelectionItemRepresentation(item));
       }

@@ -7,7 +7,7 @@ namespace God.CLI.Common.Services.Console {
     }
 
     public int GetHeight() {
-      return System.Console.GetCursorPosition().Top;
+      return System.Console.WindowHeight;
     }
 
     public string ReadLine() {
@@ -25,6 +25,8 @@ namespace God.CLI.Common.Services.Console {
     public void WriteToRow(int rowIndex, string text) {
       System.Console.SetCursorPosition(0, rowIndex);
       System.Console.Write(text);
+      System.Console.SetCursorPosition(0, GetHeight()-1);
+
     }
 
     ConsoleKeyInfo IConsoleIO.ReadKey() {

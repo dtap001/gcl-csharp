@@ -13,6 +13,11 @@ namespace God.CLI.Tests {
       this.readKeys = readKeys;
       this.height = height;
     }
+    public string Output {
+      get {
+        return output.TrimEnd('\n');
+      }
+    }
 
     public void Clear() {
       this.output = string.Empty;
@@ -23,6 +28,9 @@ namespace God.CLI.Tests {
     }
 
     public ConsoleKeyInfo ReadKey() {
+      if (lastReadKeyIndex == readKeys.Count) {
+        return new ConsoleKeyInfo('a', ConsoleKey.Enter, false, false, false);
+      }
       var result = readKeys[lastReadKeyIndex];
       lastReadKeyIndex = lastReadKeyIndex + 1;
       return result;

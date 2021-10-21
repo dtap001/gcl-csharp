@@ -11,7 +11,7 @@ namespace God.CLI.Framework.Services.FileSystem {
     }
 
     public void ListFolderContent(OSPath currentPath) {
-      var filter = new DinamicalListFilter(consoleIO, new SelectionCanvas(consoleIO));
+      var filter = new DinamicalListFilter(consoleIO);
       var files = FileListUtil.ListFilesInFolder(currentPath);
       filter.Filter(files.Select(x => x.ToString()).ToList());
     }
