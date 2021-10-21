@@ -28,6 +28,9 @@ namespace God.CLI.Common {
       if (originalIndex == 0) {
         return;
       }
+      foreach (var item in items) {
+        item.IsSelectedPreviously = false;
+      }
 
       items[originalIndex].IsSelectedCurrently = false;
       items[originalIndex].IsSelectedPreviously = true;
@@ -39,7 +42,9 @@ namespace God.CLI.Common {
       if (originalIndex == items.Count - 1) {
         return;
       }
-
+      foreach (var item in items) {
+        item.IsSelectedPreviously = false;
+      }
       items[originalIndex].IsSelectedCurrently = false;
       items[originalIndex].IsSelectedPreviously = true;
       items[originalIndex + 1].IsSelectedCurrently = true;

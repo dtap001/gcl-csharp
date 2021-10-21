@@ -7,21 +7,19 @@ namespace God.CLI.Common {
     private const int BOTTOM_PLACEHOLDER_HEIGHT = 2;
     private bool isInit = true;
     private IConsoleIO console;
-    private int previouslyDrawnChunkIndex = -1;
     public SelectionCanvas(IConsoleIO console) {
       this.console = console;
-
     }
 
-    public void Drawn(List<SelectionItem> items, string currentFilter) {
+    public void Drawn(List<SelectionItem> items, string currentFilter, Change change) {
       var containerHeight = console.GetHeight();
       var chunkSize = (containerHeight - BOTTOM_PLACEHOLDER_HEIGHT);
       var chunkCount = items.Count / chunkSize;
       var currentSelectedItemIndex = items.IndexOf(items.Where(x => x.IsSelectedCurrently).ToList().First());
 
       var currentSelectedItemChunkStartIndex = 0;
-      for (int currentChunkStartIndex = 0; currentChunkStartIndex >= items.Count; currentChunkStartIndex = currentChunkStartIndex + chunkSize) {
-        if (currentSelectedItemIndex > currentChunkStartIndex) {
+      for (int currentChunkStartIndex = 0; currentChunkStartIndex <= items.Count; currentChunkStartIndex = currentChunkStartIndex + chunkSize) {
+        if (currentSelectedItemIndex >= currentChunkStartIndex + chunkSize) {
           continue;
         }
         currentSelectedItemChunkStartIndex = currentChunkStartIndex;
@@ -41,17 +39,12 @@ namespace God.CLI.Common {
       var isOnChunkStartBorder = currentSelectedItemIndex == currentSelectedItemChunkStartIndex;
       var isOnChunkEndBorder = currentSelectedItemIndex == currentSelectedItemChunkEndIndex;
 
-      var isMovingDown = !isOnChunkStartBorder && items[currentSelectedItemIndex - 1].IsSelectedCurrently != items[currentSelectedItemIndex - 1].IsSelectedPreviously;
-      var isMovingUp = !isOnChunkEndBorder && items[currentSelectedItemIndex + 1].IsSelectedCurrently != items[currentSelectedItemIndex + 1].IsSelectedPreviously;
-
-
-
       var needFullRedrawn = false;
-      if (isOnChunkStartBorder && isMovingDown) {
+      if (isOnChunkStartBorder && change == Change.DOWN) {
         needFullRedrawn = true;
       }
 
-      if (isOnChunkEndBorder && isMovingUp) {
+      if (isOnChunkEndBorder && change == Change.UP) {
         needFullRedrawn = true;
       }
 
@@ -63,12 +56,8 @@ namespace God.CLI.Common {
       if (needFullRedrawn) {
         Redrawn(itemsForCurrentChunk);
       }
-
-      if (isMovingUp) {
-        RedrawnAt(itemsForCurrentChunk, selectedItemIndexInChunk, selectedItemIndexInChunk--);
-      }
-      if (isMovingDown) {
-        RedrawnAt(itemsForCurrentChunk, selectedItemIndexInChunk, selectedItemIndexInChunk++);
+      else {
+        RedrawnAt(itemsForCurrentChunk, selectedItemIndexInChunk, change);
       }
     }
 
@@ -78,9 +67,16 @@ namespace God.CLI.Common {
       }
     }
 
-    private void RedrawnAt(List<SelectionItem> items, int newIndex, int previousIndex) {
+    private void RedrawnAt(List<SelectionItem> items, int newIndex, Change change) {
+      int previousIndex = newIndex;
+      if (change == Change.UP) {
+        previousIndex = newIndex + 1;
+      }
+      if (change == Change.DOWN) {
+        previousIndex = newIndex - 1;
+      }
       console.WriteToRow(newIndex, GetSelectionItemRepresentation(items[newIndex]));
-      console.WriteToRow(newIndex, GetSelectionItemRepresentation(items[previousIndex]));
+      console.WriteToRow(previousIndex, GetSelectionItemRepresentation(items[previousIndex]));
     }
 
     public string GetSelectionItemRepresentation(SelectionItem item) {

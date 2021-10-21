@@ -4,6 +4,11 @@ using System.Linq;
 using God.CLI.Common.Services.Console;
 
 namespace God.CLI.Common {
+  public enum Change {
+    DOWN,
+    UP,
+    OTHER
+  }
   public class DinamicalListFilter {
     IConsoleIO console;
     SelectionCanvas canvas;
@@ -14,7 +19,8 @@ namespace God.CLI.Common {
     }
     public string Filter(List<string> content) {
       var manager = new SelectionManager(content);
-      canvas.Drawn(manager.Items, manager.Filter);
+      var change = Change.OTHER;
+      canvas.Drawn(manager.Items, manager.Filter, change);
 
       ConsoleKeyInfo keyinfo;
       do {
@@ -25,14 +31,16 @@ namespace God.CLI.Common {
         }
         else if (keyinfo.Key == ConsoleKey.UpArrow) {
           manager.MoveSelectionUp();
+          change = Change.UP;
         }
         else if (keyinfo.Key == ConsoleKey.DownArrow) {
           manager.MoveSelectionDown();
+          change = Change.DOWN;
         }
         else {
           manager.FilterNow(keyinfo.KeyChar);
         }
-        canvas.Drawn(manager.Items, manager.Filter);
+        canvas.Drawn(manager.Items, manager.Filter, change);
       }
       while (keyinfo.Key != ConsoleKey.Enter);
 
