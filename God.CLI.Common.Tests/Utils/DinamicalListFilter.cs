@@ -11,7 +11,7 @@ namespace God.CLI.Tests {
     MockConsole console;
 
     public DinamicalListFilterTest() {
-      listToFilter = new List<string>() { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", };
+      listToFilter = new List<string>() { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
     }
 
     [Fact]
@@ -28,8 +28,25 @@ namespace God.CLI.Tests {
       console = new MockConsole(expectedReadChars, 5);
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
-      int selectedCount = console.Output.Where(c => c == '*').ToList().Count;
-      Assert.Equal(1, selectedCount);
+      Assert.Equal(1, CountSelectionItems(console));
+    }
+
+
+    [Fact]
+    public void TestDownToBottomThanUp() {
+      expectedReadChars = new List<ConsoleKeyInfo>() {
+        new ConsoleKeyInfo('a', ConsoleKey.DownArrow, false,false, false),
+        new ConsoleKeyInfo('a', ConsoleKey.DownArrow, false,false, false),
+        new ConsoleKeyInfo('a', ConsoleKey.DownArrow, false,false, false),
+        new ConsoleKeyInfo('a', ConsoleKey.UpArrow, false,false, false),
+        new ConsoleKeyInfo('a', ConsoleKey.UpArrow, false,false, false),
+        new ConsoleKeyInfo('a', ConsoleKey.UpArrow, false,false, false),
+      };
+
+      console = new MockConsole(expectedReadChars, 5);
+      var filter = new DinamicalListFilter(console);
+      filter.Filter(listToFilter);
+      Assert.Equal(1, CountSelectionItems(console));
     }
 
     [Fact]
@@ -46,8 +63,7 @@ namespace God.CLI.Tests {
       console = new MockConsole(expectedReadChars, 5);
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
-      int selectedCount = console.Output.Where(c => c == '*').ToList().Count;
-      Assert.Equal(1, selectedCount);
+      Assert.Equal(1, CountSelectionItems(console));
     }
 
     [Fact]
@@ -64,8 +80,7 @@ namespace God.CLI.Tests {
       console = new MockConsole(expectedReadChars, 5);
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
-      int selectedCount = console.Output.Where(c => c == '*').ToList().Count;
-      Assert.Equal(1, selectedCount);
+      Assert.Equal(1, CountSelectionItems(console));
     }
 
     [Fact]
@@ -79,11 +94,8 @@ namespace God.CLI.Tests {
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
 
-      int selectedCount = console.Output.Where(c => c == '*').ToList().Count;
-      Assert.Equal(1, selectedCount);
-
-      var outputList = console.Output.Split('\n').ToList();
-      Assert.Equal(2, outputList.Count);
+      Assert.Equal(1, CountSelectionItems(console));
+      Assert.Equal(2, CountSelectionItems(console));
     }
 
     [Fact]
@@ -96,14 +108,9 @@ namespace God.CLI.Tests {
       console = new MockConsole(expectedReadChars, 5);
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
-
-      int selectedCount = console.Output.Where(c => c == '*').ToList().Count;
-      Assert.Equal(0, selectedCount);
-
-      var outputList = console.Output.Split('\n').ToList();
-      Assert.Equal(0, outputList.Count);
+      Assert.Equal(0, CountSelectionItems(console));
+      Assert.Equal(0, CountSelectionItems(console));
     }
-
     [Fact]
     public void TestFilterToItemOnOtherChunk() {
       listToFilter = new List<string>() { "aaa", "bbbb", "ab" };
@@ -114,16 +121,11 @@ namespace God.CLI.Tests {
       console = new MockConsole(expectedReadChars, 3);
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
-
-      int selectedCount = console.Output.Where(c => c == '*').ToList().Count;
-      Assert.Equal(1, selectedCount);
-
-      var outputList = console.Output.Split('\n').ToList();
-      Assert.Equal(2, outputList.Count);
+      Assert.Equal(1, CountSelectionItems(console));
+      Assert.Equal(2, CountSelectionItems(console));
     }
 
-
-      [Fact]
+    [Fact]
     public void TestFilterToItemThanBackspace() {
       listToFilter = new List<string>() { "aaa", "bbbb", "ab" };
       expectedReadChars = new List<ConsoleKeyInfo>() {
@@ -134,13 +136,46 @@ namespace God.CLI.Tests {
       console = new MockConsole(expectedReadChars, 6);
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
-
-      int selectedCount = console.Output.Where(c => c == '*').ToList().Count;
-      Assert.Equal(1, selectedCount);
-
-      var outputList = console.Output.Split('\n').ToList();
-      Assert.Equal(3, outputList.Count);
+      Assert.Equal(1, CountSelectionItems(console));
+      Assert.Equal(3, CountSelectionItems(console));
     }
 
+    [Fact]
+    public void TestDoubleBackspace() {
+      listToFilter = new List<string>() { "aaa", "bbbb", "ab" };
+      expectedReadChars = new List<ConsoleKeyInfo>() {
+        new ConsoleKeyInfo('b', ConsoleKey.Backspace, false,false, false),
+        new ConsoleKeyInfo('b', ConsoleKey.Backspace, false,false, false),
+      };
+
+      console = new MockConsole(expectedReadChars, 6);
+      var filter = new DinamicalListFilter(console);
+      filter.Filter(listToFilter);
+      Assert.Equal(1, CountSelectionItems(console));
+      Assert.Equal(3, CountSelectionItems(console));
+    }
+
+    [Fact]
+    public void TestMultipleFilterWithNoResult() {
+      listToFilter = new List<string>() { "aaa", "bbbb", "ab" };
+      expectedReadChars = new List<ConsoleKeyInfo>() {
+        new ConsoleKeyInfo('b', ConsoleKey.X, false,false, false),
+        new ConsoleKeyInfo('b', ConsoleKey.X, false,false, false),
+      };
+
+      console = new MockConsole(expectedReadChars, 6);
+      var filter = new DinamicalListFilter(console);
+      filter.Filter(listToFilter);
+
+      Assert.Equal(1, CountSelectionItems(console));
+      Assert.Equal(3, CountSelectionItems(console));
+    }
+
+    private int CountSelectionItems(MockConsole console) {
+      return console.Output.Where(i => i == '[').Count();
+    }
+    private int CountSelectedItems(MockConsole console) {
+      return console.Output.Where(i => i == '*').Count();
+    }
   }
 }

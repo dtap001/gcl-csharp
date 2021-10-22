@@ -1,21 +1,30 @@
 using God.CLI.Common.Services.Console;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace God.CLI.Common {
   public class SelectionCanvas {
-    private const int BOTTOM_PLACEHOLDER_HEIGHT = 2;
+    public const int BOTTOM_PLACEHOLDER_HEIGHT = 2;
     private bool isInit = true;
     private IConsoleIO console;
-    public SelectionCanvas(IConsoleIO console) {
-      this.console = console;
-    }
+    public SelectionCanvas(IConsoleIO console) => this.console = console;
 
     public void Reset() {
       isInit = true;
     }
 
     public void Drawn(List<SelectionItem> items, string currentFilter, Change change) {
+      DrawnList(items, change);
+      DrawnFilterBar(currentFilter);
+    }
+    private void DrawnFilterBar(string currentFilter) {
+      var containerHeight = console.GetHeight();
+      console.WriteToRow(containerHeight - 2, "===================================");
+      console.WriteToRow(containerHeight - 1, " => " + currentFilter);
+    }
+
+    private void DrawnList(List<SelectionItem> items, Change change) {
       if (items.Count == 0) {
         console.Clear();
         return;
@@ -45,7 +54,7 @@ namespace God.CLI.Common {
       var selectedItemIndexInChunk = itemsForCurrentChunk.IndexOf(itemsForCurrentChunk.Where(x => x.IsSelectedCurrently).ToList().First());
 
       var isOnChunkStartBorder = currentSelectedItemIndex == currentSelectedItemChunkStartIndex;
-      var isOnChunkEndBorder = currentSelectedItemIndex == currentSelectedItemChunkEndIndex;
+      var isOnChunkEndBorder = currentSelectedItemIndex == currentSelectedItemChunkEndIndex - 1;
 
       var needFullRedrawn = false;
       if (isOnChunkStartBorder && change == Change.DOWN) {
@@ -62,21 +71,29 @@ namespace God.CLI.Common {
       }
 
       if (needFullRedrawn) {
-        Redrawn(itemsForCurrentChunk);
+        RedrawnList(itemsForCurrentChunk);
       }
       else {
-        RedrawnAt(itemsForCurrentChunk, selectedItemIndexInChunk, change);
+        RedrawnListAt(itemsForCurrentChunk, selectedItemIndexInChunk, change);
       }
     }
 
-    private void Redrawn(List<SelectionItem> items) {
+    private void RedrawnList(List<SelectionItem> items) {
       console.Clear();
       foreach (var item in items) {
-        console.WriteLine(GetSelectionItemRepresentation(item));
+        console.Write(GetSelectionItemRepresentation(item));
+        foreach (var itemPart in item.GetValueParts()) {
+          if (itemPart is HighlightableValuePart) {
+            console.WriteHighlight(itemPart.Value);
+            continue;
+          }
+          console.Write(itemPart.Value);
+        }
+        console.Write("\n");
       }
     }
 
-    private void RedrawnAt(List<SelectionItem> items, int newIndex, Change change) {
+    private void RedrawnListAt(List<SelectionItem> items, int newIndex, Change change) {
       int previousIndex = newIndex;
       if (change == Change.UP) {
         previousIndex = newIndex + 1;
@@ -85,7 +102,9 @@ namespace God.CLI.Common {
         previousIndex = newIndex - 1;
       }
       console.WriteToRow(newIndex, GetSelectionItemRepresentation(items[newIndex]));
-      console.WriteToRow(previousIndex, GetSelectionItemRepresentation(items[previousIndex]));
+      if (previousIndex >= 0 && previousIndex <= items.Count - 1) {
+        console.WriteToRow(previousIndex, GetSelectionItemRepresentation(items[previousIndex]));
+      }
     }
 
     public string GetSelectionItemRepresentation(SelectionItem item) {
@@ -96,7 +115,6 @@ namespace God.CLI.Common {
       else {
         result += "[ ] ";
       }
-      result += item.Value;
       return result;
     }
   }

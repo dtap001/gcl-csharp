@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "God.CLI.Framework", "God.CL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "God.CLI.Domain", "God.CLI.Domain\God.CLI.Domain.csproj", "{7C323E70-33AC-4314-A2E8-B43D4836AE8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "God.CLI.Tests", "God.CLI.Tests\God.CLI.Tests.csproj", "{E923E1BE-54FD-4802-B9B5-04EECEE995EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "God.CLI.Common.Tests", "God.CLI.Common.Tests\God.CLI.Common.Tests.csproj", "{E923E1BE-54FD-4802-B9B5-04EECEE995EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,6 +1,8 @@
+using God.CLI.Common;
 using God.CLI.Common.Services.Console;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace God.CLI.Tests {
   public class MockConsole : IConsoleIO {
@@ -24,7 +26,7 @@ namespace God.CLI.Tests {
     }
 
     public int GetHeight() {
-      return height;
+      return height - SelectionCanvas.BOTTOM_PLACEHOLDER_HEIGHT;
     }
 
     public ConsoleKeyInfo ReadKey() {
@@ -41,7 +43,10 @@ namespace God.CLI.Tests {
     }
 
     public void Write(string text) {
-      throw new NotImplementedException();
+    }
+
+    public void WriteHighlight(string text) {
+    
     }
 
     public void WriteLine(string text) {
@@ -49,7 +54,14 @@ namespace God.CLI.Tests {
     }
 
     public void WriteToRow(int rowIndex, string text) {
-      var outputList = output.Split('\n');
+      var outputList = output.Split('\n').ToList();
+      if (rowIndex > outputList.Count - 1) {
+        int diff = rowIndex - (outputList.Count - 1);
+        foreach (var i in Enumerable.Range(0, diff)) {
+          outputList.Add("");
+        }
+      }
+
       outputList[rowIndex] = text;
       output = string.Join('\n', outputList);
 

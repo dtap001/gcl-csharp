@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 
 namespace God.CLI.Common.Services.Console {
   public class DefaultConsoleIO : IConsoleIO {
@@ -15,6 +16,11 @@ namespace God.CLI.Common.Services.Console {
     }
 
     public void Write(string text) {
+      System.Console.ForegroundColor = ConsoleColor.White;
+      System.Console.Write(text);
+    }
+    public void WriteHighlight(string text) {
+      System.Console.ForegroundColor = ConsoleColor.Yellow;
       System.Console.Write(text);
     }
 
@@ -23,10 +29,11 @@ namespace God.CLI.Common.Services.Console {
     }
 
     public void WriteToRow(int rowIndex, string text) {
+      System.Console.CursorVisible = false;
       System.Console.SetCursorPosition(0, rowIndex);
       System.Console.Write(text);
-      System.Console.SetCursorPosition(0, GetHeight()-1);
-
+      System.Console.SetCursorPosition(0, GetHeight() - 1);
+      System.Console.CursorVisible = true;
     }
 
     ConsoleKeyInfo IConsoleIO.ReadKey() {

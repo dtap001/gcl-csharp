@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace God.CLI.Common {
   public class SelectionManager {
@@ -9,12 +10,12 @@ namespace God.CLI.Common {
 
     public List<SelectionItem> Items { get { return items; } }
     public string Filter { get { return filter; } }
-    private string filter;
+    private string filter = string.Empty;
     public SelectionManager(List<string> list) {
       items =
        list
            .Select(x =>
-               new SelectionItem() { IsSelectedCurrently = false, IsSelectedPreviously = false, Value = x })
+               new SelectionItem(x) { IsSelectedCurrently = false, IsSelectedPreviously = false })
            .ToList();
       originalItems = new List<SelectionItem>(items);
       items.First().IsSelectedCurrently = true;
@@ -56,13 +57,29 @@ namespace God.CLI.Common {
 
     public void FilterNow() {
       if (this.items.Count == 0) { return; }
+      this.items = new List<SelectionItem>();
 
-      foreach (var item in items) {
-        item.IsSelectedPreviously = false;
-        item.IsSelectedCurrently = false;
+      foreach (var item in originalItems) {
+        if (!item.Value.ToLower().Contains(filter.ToLower())) {
+          continue;
+        }
+
+        var splittedValue = Regex.Split(item.Value.ToLower(), $"({filter.ToLower()})");
+        var newSelectionItemParts = new List<ValuePart>();
+        foreach (var value in splittedValue) {
+          if (value.ToLower().Contains(filter)) {
+            newSelectionItemParts.Add(new HighlightableValuePart() { Value = value });
+            continue;
+          }
+          newSelectionItemParts.Add(new ValuePart() { Value = value });
+          item.SetValue(newSelectionItemParts);
+        }
+        this.items.Add(item);
       }
-      this.items = originalItems.Where(x => x.Value.Contains(filter)).ToList();
-      if (items.Where(i => i.IsSelectedCurrently).ToList().Count == 0) {
+
+      bool hasItems = items.Count > 0;
+      bool isNothingSelected = hasItems && items.Where(i => i.IsSelectedCurrently).ToList().Count == 0;
+      if (isNothingSelected) {
         items.First().IsSelectedCurrently = true;
       }
     }
