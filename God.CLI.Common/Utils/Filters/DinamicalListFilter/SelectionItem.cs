@@ -6,31 +6,34 @@ namespace God.CLI.Common {
     public SelectionItem(string initialValue) {
       SetValue(initialValue);
     }
-    private List<ValuePart> valueParts = new List<ValuePart>();
+    public SelectionItem(List<SelectionItemPart> selectionItemPart) {
+      this.itemParts = selectionItemPart;
+    }
+    private List<SelectionItemPart> itemParts = new List<SelectionItemPart>();
     public bool IsSelectedPreviously { get; set; }
     public bool IsSelectedCurrently { get; set; }
 
-    public void SetValue(List<ValuePart> values) {
-      this.valueParts = values;
+    public void SetValue(List<SelectionItemPart> values) {
+      this.itemParts = values;
     }
 
     public void SetValue(string value) {
-      this.valueParts = new List<ValuePart>() { new ValuePart() { Value = value } };
+      this.itemParts = new List<SelectionItemPart>() { new SelectionItemPart() { Value = value } };
     }
 
-    public List<ValuePart> GetValueParts() {
-      return valueParts;
+    public List<SelectionItemPart> GetValueParts() {
+      return itemParts;
     }
 
     public string Value {
       get {
-        return string.Concat(valueParts.Select(item => item.Value));
+        return string.Concat(itemParts.Select(item => item.Value));
       }
     }
   }
 
-  public class ValuePart {
+  public class SelectionItemPart {
     public string Value { get; set; }
   }
-  public class HighlightableValuePart : ValuePart { }
+  public class SelectionHighlightedItemPart : SelectionItemPart { }
 }

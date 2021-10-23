@@ -83,7 +83,7 @@ namespace God.CLI.Common {
       foreach (var item in items) {
         console.Write(GetSelectionItemRepresentation(item));
         foreach (var itemPart in item.GetValueParts()) {
-          if (itemPart is HighlightableValuePart) {
+          if (itemPart is SelectionHighlightedItemPart) {
             console.WriteHighlight(itemPart.Value);
             continue;
           }

@@ -6,24 +6,23 @@ namespace God.CLI.Common {
   public class SelectionManager {
 
     private List<SelectionItem> items;
-    private List<SelectionItem> originalItems;
+    private List<string> originalItems;
 
     public List<SelectionItem> Items { get { return items; } }
     public string Filter { get { return filter; } }
     private string filter = string.Empty;
     public SelectionManager(List<string> list) {
-      items =
-       list
-           .Select(x =>
-               new SelectionItem(x) { IsSelectedCurrently = false, IsSelectedPreviously = false })
-           .ToList();
-      originalItems = new List<SelectionItem>(items);
-      items.First().IsSelectedCurrently = true;
+      this.originalItems = new List<string>(list);
+      ResetToOriginalList();
     }
-    public void Reset() {
-      this.items = originalItems;
+    public void ResetToOriginalList() {
+      this.items =
+      this.originalItems
+          .Select(x =>
+              new SelectionItem(x) { IsSelectedCurrently = false, IsSelectedPreviously = false })
+          .ToList();
+      this.items.First().IsSelectedCurrently = true;
     }
-
     public void MoveSelectionUp() {
       var originalIndex = CurrentlySelectedIndex();
       if (originalIndex == 0) {
@@ -56,32 +55,37 @@ namespace God.CLI.Common {
     }
 
     public void FilterNow() {
-      if (this.items.Count == 0) { return; }
-      this.items = new List<SelectionItem>();
+      if (filter.Length == 0) {
+        ResetToOriginalList();
+        return;
+      }     
+      var newItems = new List<SelectionItem>();
 
       foreach (var item in originalItems) {
-        if (!item.Value.ToLower().Contains(filter.ToLower())) {
+        if (!Regex.Match(item, $"({filter})", RegexOptions.IgnoreCase).Success) {
           continue;
         }
 
-        var splittedValue = Regex.Split(item.Value.ToLower(), $"({filter.ToLower()})");
-        var newSelectionItemParts = new List<ValuePart>();
+        var splittedValue = Regex.Split(item, $"({filter})", RegexOptions.IgnoreCase);
+        var newSelectionItemParts = new List<SelectionItemPart>();
         foreach (var value in splittedValue) {
-          if (value.ToLower().Contains(filter)) {
-            newSelectionItemParts.Add(new HighlightableValuePart() { Value = value });
+
+          if (Regex.Match(value, $"({filter})", RegexOptions.IgnoreCase).Success) {
+            newSelectionItemParts.Add(new SelectionHighlightedItemPart() { Value = value });
             continue;
           }
-          newSelectionItemParts.Add(new ValuePart() { Value = value });
-          item.SetValue(newSelectionItemParts);
+          newSelectionItemParts.Add(new SelectionItemPart() { Value = value });
         }
-        this.items.Add(item);
+
+        newItems.Add(new SelectionItem(newSelectionItemParts));
       }
 
-      bool hasItems = items.Count > 0;
-      bool isNothingSelected = hasItems && items.Where(i => i.IsSelectedCurrently).ToList().Count == 0;
+      bool hasItems = newItems.Count > 0;
+      bool isNothingSelected = hasItems && newItems.Where(i => i.IsSelectedCurrently).ToList().Count == 0;
       if (isNothingSelected) {
-        items.First().IsSelectedCurrently = true;
+        newItems.First().IsSelectedCurrently = true;
       }
+      this.items = newItems;
     }
 
     public void BackspaceFilter() {

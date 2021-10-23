@@ -28,7 +28,7 @@ namespace God.CLI.Tests {
       console = new MockConsole(expectedReadChars, 5);
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
-      Assert.Equal(1, CountSelectionItems(console));
+      Assert.Equal(1, CountSelectedItems(console));
     }
 
 
@@ -46,7 +46,7 @@ namespace God.CLI.Tests {
       console = new MockConsole(expectedReadChars, 5);
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
-      Assert.Equal(1, CountSelectionItems(console));
+      Assert.Equal(1, CountSelectedItems(console));
     }
 
     [Fact]
@@ -63,7 +63,7 @@ namespace God.CLI.Tests {
       console = new MockConsole(expectedReadChars, 5);
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
-      Assert.Equal(1, CountSelectionItems(console));
+      Assert.Equal(1, CountSelectedItems(console));
     }
 
     [Fact]
@@ -80,7 +80,7 @@ namespace God.CLI.Tests {
       console = new MockConsole(expectedReadChars, 5);
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
-      Assert.Equal(1, CountSelectionItems(console));
+      Assert.Equal(1, CountSelectedItems(console));
     }
 
     [Fact]
@@ -94,7 +94,7 @@ namespace God.CLI.Tests {
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
 
-      Assert.Equal(1, CountSelectionItems(console));
+      Assert.Equal(1, CountSelectedItems(console));
       Assert.Equal(2, CountSelectionItems(console));
     }
 
@@ -108,7 +108,7 @@ namespace God.CLI.Tests {
       console = new MockConsole(expectedReadChars, 5);
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
-      Assert.Equal(0, CountSelectionItems(console));
+      Assert.Equal(0, CountSelectedItems(console));
       Assert.Equal(0, CountSelectionItems(console));
     }
     [Fact]
@@ -118,10 +118,10 @@ namespace God.CLI.Tests {
         new ConsoleKeyInfo('b', ConsoleKey.B, false,false, false),
       };
 
-      console = new MockConsole(expectedReadChars, 3);
+      console = new MockConsole(expectedReadChars, 4);
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
-      Assert.Equal(1, CountSelectionItems(console));
+      Assert.Equal(1, CountSelectedItems(console));
       Assert.Equal(2, CountSelectionItems(console));
     }
 
@@ -136,7 +136,7 @@ namespace God.CLI.Tests {
       console = new MockConsole(expectedReadChars, 6);
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
-      Assert.Equal(1, CountSelectionItems(console));
+      Assert.Equal(1, CountSelectedItems(console));
       Assert.Equal(3, CountSelectionItems(console));
     }
 
@@ -151,7 +151,7 @@ namespace God.CLI.Tests {
       console = new MockConsole(expectedReadChars, 6);
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
-      Assert.Equal(1, CountSelectionItems(console));
+      Assert.Equal(1, CountSelectedItems(console));
       Assert.Equal(3, CountSelectionItems(console));
     }
 
@@ -159,17 +159,54 @@ namespace God.CLI.Tests {
     public void TestMultipleFilterWithNoResult() {
       listToFilter = new List<string>() { "aaa", "bbbb", "ab" };
       expectedReadChars = new List<ConsoleKeyInfo>() {
-        new ConsoleKeyInfo('b', ConsoleKey.X, false,false, false),
-        new ConsoleKeyInfo('b', ConsoleKey.X, false,false, false),
+        new ConsoleKeyInfo('x', ConsoleKey.X, false,false, false),
+        new ConsoleKeyInfo('x', ConsoleKey.X, false,false, false),
       };
 
       console = new MockConsole(expectedReadChars, 6);
       var filter = new DinamicalListFilter(console);
       filter.Filter(listToFilter);
 
-      Assert.Equal(1, CountSelectionItems(console));
-      Assert.Equal(3, CountSelectionItems(console));
+      Assert.Equal(0, CountSelectedItems(console));
+      Assert.Equal(0, CountSelectionItems(console));
     }
+
+     [Fact]
+    public void TestMultipleFilterWithNoResultThanBackspace() {
+      listToFilter = new List<string>() { "aaa", "bbbb", "ab" };
+      expectedReadChars = new List<ConsoleKeyInfo>() {
+        new ConsoleKeyInfo('a', ConsoleKey.A, false,false, false),
+        new ConsoleKeyInfo('x', ConsoleKey.X, false,false, false),
+        new ConsoleKeyInfo(' ', ConsoleKey.Backspace, false,false, false)       
+      };
+
+      console = new MockConsole(expectedReadChars, 6);
+      var filter = new DinamicalListFilter(console);
+      filter.Filter(listToFilter);
+
+      Assert.Equal(1, CountSelectedItems(console));
+      Assert.Equal(2, CountSelectionItems(console));
+    }
+
+    [Fact]
+    public void TestMultiFilterMultiBackspace() {
+      listToFilter = new List<string>() { "aasdb", "dddsdasd", "ssdadqwdawd","aasdvvasd","asdsssww","hhhh","kkkkk" };
+      expectedReadChars = new List<ConsoleKeyInfo>() {
+        new ConsoleKeyInfo('a', ConsoleKey.A, false,false, false),
+        new ConsoleKeyInfo('a', ConsoleKey.A, false,false, false),
+        new ConsoleKeyInfo('x', ConsoleKey.Backspace, false,false, false),
+        new ConsoleKeyInfo('x', ConsoleKey.Backspace, false,false, false),
+        new ConsoleKeyInfo('a', ConsoleKey.A, false,false, false),
+        new ConsoleKeyInfo('a', ConsoleKey.Backspace, false,false, false),
+      };
+
+      console = new MockConsole(expectedReadChars, 15);
+      var filter = new DinamicalListFilter(console);
+      filter.Filter(listToFilter);
+
+      Assert.Equal(1, CountSelectedItems(console));
+      Assert.Equal(listToFilter.Count, CountSelectionItems(console));
+    } 
 
     private int CountSelectionItems(MockConsole console) {
       return console.Output.Where(i => i == '[').Count();

@@ -26,12 +26,12 @@ namespace God.CLI.Tests {
     }
 
     public int GetHeight() {
-      return height - SelectionCanvas.BOTTOM_PLACEHOLDER_HEIGHT;
+      return height;
     }
 
     public ConsoleKeyInfo ReadKey() {
       if (lastReadKeyIndex == readKeys.Count) {
-        return new ConsoleKeyInfo('a', ConsoleKey.Enter, false, false, false);
+        return new ConsoleKeyInfo(' ', ConsoleKey.Enter, false, false, false);
       }
       var result = readKeys[lastReadKeyIndex];
       lastReadKeyIndex = lastReadKeyIndex + 1;
@@ -43,10 +43,12 @@ namespace God.CLI.Tests {
     }
 
     public void Write(string text) {
+      output += text;
     }
 
     public void WriteHighlight(string text) {
-    
+      output += $"#{text}#";
+
     }
 
     public void WriteLine(string text) {

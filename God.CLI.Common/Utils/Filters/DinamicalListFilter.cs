@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using God.CLI.Common.Services.Console;
 
 namespace God.CLI.Common {
@@ -39,7 +40,7 @@ namespace God.CLI.Common {
           manager.MoveSelectionDown();
           change = Change.DOWN;
         }
-        else if (ShouldFilter(keyinfo.Key)) {
+        else if (IsFilterChar(keyinfo.KeyChar+"")) {
           manager.AddToFilter(keyinfo.KeyChar);
           manager.FilterNow();
           canvas.Reset();
@@ -51,16 +52,10 @@ namespace God.CLI.Common {
       return manager.Items.Count != 0 ? manager.Items.First().Value : string.Empty;
     }
 
-    private bool ShouldFilter(ConsoleKey consoleKey) {
-      switch (consoleKey) {
-        case ConsoleKey.DownArrow:
-        case ConsoleKey.UpArrow:
-        case ConsoleKey.Enter:
-          return false;
-        default:
-          return true;
-      }
+    private bool IsFilterChar(string input) {
+      return Regex.IsMatch(input, @"^[a-zA-Z0-9_]+$");
     }
+
   }
 
 

@@ -20,7 +20,7 @@ namespace God.CLI.Common.Services.Console {
       System.Console.Write(text);
     }
     public void WriteHighlight(string text) {
-      System.Console.ForegroundColor = ConsoleColor.Yellow;
+      System.Console.ForegroundColor = ConsoleColor.DarkYellow;
       System.Console.Write(text);
     }
 
