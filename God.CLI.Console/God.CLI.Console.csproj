@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\God.CLI.Framework\God.CLI.Framework.csproj" />
+    <ProjectReference Include="..\God.CLI.Domain\God.CLI.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.3.0" />

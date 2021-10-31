@@ -8,5 +8,6 @@
   </ItemGroup>  
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.3.0" />
+    <PackageReference Include="cliwrap" Version="3.3.3" />
   </ItemGroup>
 </Project>

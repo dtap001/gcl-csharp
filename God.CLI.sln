@@ -5,13 +5,17 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "God.CLI.Common", "God.CLI.Common\God.CLI.Common.csproj", "{2A88B5A6-663E-420D-A7C7-27E23A29C67D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "God.CLI", "God.CLI\God.CLI.csproj", "{042E2111-3E0B-463B-A32D-CE31B2CA1466}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "God.CLI.Console", "God.CLI.Console\God.CLI.Console.csproj", "{042E2111-3E0B-463B-A32D-CE31B2CA1466}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "God.CLI.Framework", "God.CLI.Framework\God.CLI.Framework.csproj", "{AE58902B-FD02-4DE9-ABC6-259A2A5FEE21}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "God.CLI.Domain", "God.CLI.Domain\God.CLI.Domain.csproj", "{7C323E70-33AC-4314-A2E8-B43D4836AE8A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "God.CLI.Common.Tests", "God.CLI.Common.Tests\God.CLI.Common.Tests.csproj", "{E923E1BE-54FD-4802-B9B5-04EECEE995EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "God.CLI.Framework.Tests", "God.CLI.Framework.Tests\God.CLI.Framework.Tests.csproj", "{55A7732C-4EC6-4B49-B6AB-870BF437FC05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "God.CLI.Console.Tests", "God.CLI.Console.Tests\God.CLI.Console.Tests.csproj", "{1654C7E4-F427-4AEB-B5FD-BBB85389E08F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,5 +90,29 @@ Global
 		{E923E1BE-54FD-4802-B9B5-04EECEE995EB}.Release|x64.Build.0 = Release|Any CPU
 		{E923E1BE-54FD-4802-B9B5-04EECEE995EB}.Release|x86.ActiveCfg = Release|Any CPU
 		{E923E1BE-54FD-4802-B9B5-04EECEE995EB}.Release|x86.Build.0 = Release|Any CPU
+		{55A7732C-4EC6-4B49-B6AB-870BF437FC05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55A7732C-4EC6-4B49-B6AB-870BF437FC05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55A7732C-4EC6-4B49-B6AB-870BF437FC05}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{55A7732C-4EC6-4B49-B6AB-870BF437FC05}.Debug|x64.Build.0 = Debug|Any CPU
+		{55A7732C-4EC6-4B49-B6AB-870BF437FC05}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{55A7732C-4EC6-4B49-B6AB-870BF437FC05}.Debug|x86.Build.0 = Debug|Any CPU
+		{55A7732C-4EC6-4B49-B6AB-870BF437FC05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55A7732C-4EC6-4B49-B6AB-870BF437FC05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55A7732C-4EC6-4B49-B6AB-870BF437FC05}.Release|x64.ActiveCfg = Release|Any CPU
+		{55A7732C-4EC6-4B49-B6AB-870BF437FC05}.Release|x64.Build.0 = Release|Any CPU
+		{55A7732C-4EC6-4B49-B6AB-870BF437FC05}.Release|x86.ActiveCfg = Release|Any CPU
+		{55A7732C-4EC6-4B49-B6AB-870BF437FC05}.Release|x86.Build.0 = Release|Any CPU
+		{1654C7E4-F427-4AEB-B5FD-BBB85389E08F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1654C7E4-F427-4AEB-B5FD-BBB85389E08F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1654C7E4-F427-4AEB-B5FD-BBB85389E08F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1654C7E4-F427-4AEB-B5FD-BBB85389E08F}.Debug|x64.Build.0 = Debug|Any CPU
+		{1654C7E4-F427-4AEB-B5FD-BBB85389E08F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1654C7E4-F427-4AEB-B5FD-BBB85389E08F}.Debug|x86.Build.0 = Debug|Any CPU
+		{1654C7E4-F427-4AEB-B5FD-BBB85389E08F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1654C7E4-F427-4AEB-B5FD-BBB85389E08F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1654C7E4-F427-4AEB-B5FD-BBB85389E08F}.Release|x64.ActiveCfg = Release|Any CPU
+		{1654C7E4-F427-4AEB-B5FD-BBB85389E08F}.Release|x64.Build.0 = Release|Any CPU
+		{1654C7E4-F427-4AEB-B5FD-BBB85389E08F}.Release|x86.ActiveCfg = Release|Any CPU
+		{1654C7E4-F427-4AEB-B5FD-BBB85389E08F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

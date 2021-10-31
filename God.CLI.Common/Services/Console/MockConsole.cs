@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace God.CLI.Tests {
+namespace God.CLI.Common.Services.Console {
   public class MockConsole : IConsoleIO {
     private List<ConsoleKeyInfo> readKeys;
     private string output = string.Empty;

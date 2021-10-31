@@ -5,11 +5,11 @@ namespace God.CLI.Common.Services.Console {
     void Clear();
     void Write(string text);
     void WriteHighlight(string text);
-
     void WriteToRow(int rowIndex, string text);
     void WriteLine(string text);
     string ReadLine();
     ConsoleKeyInfo ReadKey();
     int GetHeight();
+    
   }
 }

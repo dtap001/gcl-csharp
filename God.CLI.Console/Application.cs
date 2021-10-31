@@ -3,8 +3,9 @@ using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using God.CLI.Console.Commands;
 
-namespace God.CLI {
+namespace God.CLI.Console {
   public class Application {
     public async Task Run(string[] args) {
       await Host
@@ -13,7 +14,9 @@ namespace God.CLI {
       .ConfigureContainer<ContainerBuilder>(builder => {
         God.CLI.Framework.Setup.RegisterServices<Application>(builder);
       })
-      .RunConsoleAppFrameworkAsync(args);
+      .RunConsoleAppFrameworkAsync<RootCommand>(args, new ConsoleAppOptions() {
+        ShowDefaultCommand = true
+      });
     }
   }
 }

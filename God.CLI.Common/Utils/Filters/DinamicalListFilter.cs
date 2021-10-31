@@ -49,7 +49,7 @@ namespace God.CLI.Common {
       }
       while (keyinfo.Key != ConsoleKey.Enter);
 
-      return manager.Items.Count != 0 ? manager.Items.First().Value : string.Empty;
+      return  manager.Items.Where(item=>item.IsSelectedCurrently).ToList().First().Value;
     }
 
     private bool IsFilterChar(string input) {

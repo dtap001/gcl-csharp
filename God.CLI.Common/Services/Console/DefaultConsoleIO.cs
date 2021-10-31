@@ -3,6 +3,15 @@ using System.Text.RegularExpressions;
 
 namespace God.CLI.Common.Services.Console {
   public class DefaultConsoleIO : IConsoleIO {
+
+    public DefaultConsoleIO() {
+      System.Console.CursorVisible = false;
+    }
+
+    ~DefaultConsoleIO() {
+      System.Console.CursorVisible = true;
+    }
+
     public void Clear() {
       System.Console.Clear();
     }
@@ -29,11 +38,9 @@ namespace God.CLI.Common.Services.Console {
     }
 
     public void WriteToRow(int rowIndex, string text) {
-      System.Console.CursorVisible = false;
       System.Console.SetCursorPosition(0, rowIndex);
       System.Console.Write(text);
-      System.Console.SetCursorPosition(0, GetHeight() - 1);
-      System.Console.CursorVisible = true;
+      System.Console.SetCursorPosition(0, GetHeight() - 1);     
     }
 
     ConsoleKeyInfo IConsoleIO.ReadKey() {
