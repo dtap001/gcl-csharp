@@ -18,9 +18,10 @@
             "stopAtEntry": false
         },
         {
-            "name": ".NET Core Attach",
+            "name": "Publish",
             "type": "coreclr",
-            "request": "attach"
+            "request": "launch",
+            "preLaunchTask": "publish"
         }
     ]
 }

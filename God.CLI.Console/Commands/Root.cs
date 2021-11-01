@@ -5,7 +5,6 @@ using God.CLI.Console.Utils;
 using System.Collections.Generic;
 using God.CLI.Framework;
 using God.CLI.Domain;
-using System.Threading.Tasks;
 using Autofac;
 namespace God.CLI.Console.Commands {
   public class RootCommand : ConsoleAppBase {
@@ -20,14 +19,13 @@ namespace God.CLI.Console.Commands {
       this.autofacContext = autofacContextX;
     }
 
-    public async void Run() {
+    public void Run() {
       var filter = new DinamicalListFilter(console);
       List<GCLCommandInfo> allCommands = CommandExplorer.GetAll();
 
       GCLCommandInfo selected = filter.Filter<GCLCommandInfo>(allCommands);
       var service = autofacContext.ResolveOptional(selected.ClassType);
       var methodInfo = selected.ClassType.GetMethod(selected.MethodName);
-      console.Clear();
       methodInfo.Invoke(service, null);
     }
 

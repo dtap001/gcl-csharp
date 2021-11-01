@@ -13,7 +13,7 @@ namespace God.CLI.Framework.Services.FileSystem {
     public void ListFolderContent(OSPath currentPath) {
       var filter = new DinamicalListFilter(consoleIO);
       var files = FileListUtil.ListFilesInFolder(currentPath);
-      filter.Filter<OSPath>(files);
+      var selected = filter.Filter<OSPath>(files);
     }
   }
 }

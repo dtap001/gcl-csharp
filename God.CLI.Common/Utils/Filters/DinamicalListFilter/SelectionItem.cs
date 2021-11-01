@@ -8,8 +8,9 @@ namespace God.CLI.Common {
       OriginalContent = initialValue;
       SetValue(initialValue.ToString());
     }
-    public SelectionItem(List<SelectionItemPart> selectionItemPart, IToStringable originalSourceItem) {
+    public SelectionItem(List<SelectionItemPart> selectionItemPart, T originalSourceItem) {
       this.itemParts = selectionItemPart;
+      this.OriginalContent = originalSourceItem;
     }
     private List<SelectionItemPart> itemParts = new List<SelectionItemPart>();
     public bool IsSelectedPreviously { get; set; }

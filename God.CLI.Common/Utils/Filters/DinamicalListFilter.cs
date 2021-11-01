@@ -56,8 +56,5 @@ namespace God.CLI.Common {
     private bool IsFilterChar(string input) {
       return Regex.IsMatch(input, @"^[a-zA-Z0-9_]+$");
     }
-
   }
-
-
 }
