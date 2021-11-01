@@ -10,11 +10,11 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/God.CLI/bin/Debug/net5.0/God.CLI.dll",
-            "args": ["fs","ls"],
-            "cwd": "${workspaceFolder}/God.CLI",
+            "program": "${workspaceFolder}/God.CLI.Console/bin/Debug/net5.0/God.CLI.Console.dll",
+            "args": [""],
+            "cwd": "${workspaceFolder}/God.CLI.Console",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
-            "console": "internalConsole",
+            "console": "externalTerminal",
             "stopAtEntry": false
         },
         {

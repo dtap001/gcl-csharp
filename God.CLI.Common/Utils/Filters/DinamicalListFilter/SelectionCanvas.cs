@@ -1,10 +1,11 @@
 using God.CLI.Common.Services.Console;
+using God.CLI.Domain;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace God.CLI.Common {
-  public class SelectionCanvas {
+  public class SelectionCanvas <T> where T : IToStringable{
     public const int BOTTOM_PLACEHOLDER_HEIGHT = 2;
     private bool isInit = true;
     private IConsoleIO console;
@@ -14,7 +15,7 @@ namespace God.CLI.Common {
       isInit = true;
     }
 
-    public void Drawn(List<SelectionItem> items, string currentFilter, Change change) {
+    public void Drawn (List<SelectionItem<T>> items, string currentFilter, Change change)  {
       DrawnList(items, change);
       DrawnFilterBar(currentFilter);
     }
@@ -24,7 +25,7 @@ namespace God.CLI.Common {
       console.WriteToRow(containerHeight - 1, " => " + currentFilter);
     }
 
-    private void DrawnList(List<SelectionItem> items, Change change) {
+    private void DrawnList(List<SelectionItem<T>> items, Change change) {
       if (items.Count == 0) {
         console.Clear();
         return;
@@ -78,7 +79,7 @@ namespace God.CLI.Common {
       }
     }
 
-    private void RedrawnList(List<SelectionItem> items) {
+    private void RedrawnList(List<SelectionItem<T>> items) {
       console.Clear();
       foreach (var item in items) {
         console.Write(GetSelectionItemRepresentation(item));
@@ -93,7 +94,7 @@ namespace God.CLI.Common {
       }
     }
 
-    private void RedrawnListAt(List<SelectionItem> items, int newIndex, Change change) {
+    private void RedrawnListAt(List<SelectionItem<T>> items, int newIndex, Change change) {
       int previousIndex = newIndex;
       if (change == Change.UP) {
         previousIndex = newIndex + 1;
@@ -107,7 +108,7 @@ namespace God.CLI.Common {
       }
     }
 
-    public string GetSelectionItemRepresentation(SelectionItem item) {
+    public string GetSelectionItemRepresentation(SelectionItem<T> item) {
       var result = string.Empty;
       if (item.IsSelectedCurrently) {
         result += "[*] ";

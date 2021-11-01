@@ -13,6 +13,7 @@ namespace God.CLI.Console {
        .UseServiceProviderFactory(new AutofacServiceProviderFactory())
       .ConfigureContainer<ContainerBuilder>(builder => {
         God.CLI.Framework.Setup.RegisterServices<Application>(builder);
+         builder.RegisterType<FleSystemCommand>();
       })
       .RunConsoleAppFrameworkAsync<RootCommand>(args, new ConsoleAppOptions() {
         ShowDefaultCommand = true

@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace God.CLI.Domain {
-  public class OSPath {
+  public class OSPath : IToStringable {
     private string _path;
 
     public OSPath(string path) {

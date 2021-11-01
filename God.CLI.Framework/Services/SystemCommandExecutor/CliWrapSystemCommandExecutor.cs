@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using God.CLI.Common.Services.Console;
-
+using CliWrap.Buffered;
 namespace God.CLI.Framework {
   public class CliWrapSystemCommandExecutor : ISystemCommandExecutor {
     IConsoleIO console;
@@ -18,18 +18,18 @@ namespace God.CLI.Framework {
     public async Task<CommandExecutionResult> Exec(RunningContext context, string executable, List<CommandArgument> arguments) {
       CommandExecutionResult result = null;
       try {
-        console.WriteLine("asd");
         var stdOutBuffer = new StringBuilder();
         var stdErrBuffer = new StringBuilder();
         var argumentString = string.Join(" ", arguments.Select((arguments) => arguments.ToString()).ToArray());
-        CommandResult execResult = null;
 
-        execResult = await Cli.Wrap(executable)
+        console.WriteLine($"CWD: {context.CurrentWorkingDir} EXE: {executable} ARGS: {argumentString}");
+        var execResult = await Cli.Wrap(executable)
                  .WithArguments(argumentString)
                  .WithWorkingDirectory(context.CurrentWorkingDir)
                  .WithStandardOutputPipe(PipeTarget.ToStringBuilder(stdOutBuffer))
                  .WithStandardErrorPipe(PipeTarget.ToStringBuilder(stdErrBuffer))
-                 .ExecuteAsync();
+                 .WithValidation(CommandResultValidation.None)
+                 .ExecuteBufferedAsync();
 
         var stdOut = stdOutBuffer.ToString();
         var stdErr = stdErrBuffer.ToString();
@@ -39,9 +39,13 @@ namespace God.CLI.Framework {
           STDErr = stdErr,
           STDOut = stdOut
         };
+        System.Console.WriteLine("Finished execution");
       }
       catch (Exception e) {
-        console.WriteLine("Exception " + e.Message);
+        result = new CommandExecutionResult() {
+          IsOK = false,
+          STDErr = e.Message,
+        };
       }
       return result;
     }

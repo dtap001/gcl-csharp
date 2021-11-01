@@ -6,7 +6,7 @@ using Xunit;
 using System.Linq;
 namespace God.CLI.Tests {
   public class DinamicalListFilterTest {
-    List<string> listToFilter;
+   /* List<string> listToFilter;
     List<ConsoleKeyInfo> expectedReadChars;
     MockConsole console;
 
@@ -213,6 +213,6 @@ namespace God.CLI.Tests {
     }
     private int CountSelectedItems(MockConsole console) {
       return console.Output.Where(i => i == '*').Count();
-    }
+    }*/
   }
 }

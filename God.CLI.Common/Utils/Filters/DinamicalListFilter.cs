@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using God.CLI.Common.Services.Console;
+using God.CLI.Domain;
 
 namespace God.CLI.Common {
   public enum Change {
@@ -16,10 +17,10 @@ namespace God.CLI.Common {
     public DinamicalListFilter(IConsoleIO console) {
       this.console = console;
     }
-    public string Filter(List<string> content) {
-      var manager = new SelectionManager(content);
+    public T Filter<T>(List<T> content) where T : IToStringable {
+      var manager = new SelectionManager<T>(content);
       var change = Change.OTHER;
-      var canvas = new SelectionCanvas(console);
+      var canvas = new SelectionCanvas<T>(console);
 
       canvas.Drawn(manager.Items, manager.Filter, change);
 
@@ -40,7 +41,7 @@ namespace God.CLI.Common {
           manager.MoveSelectionDown();
           change = Change.DOWN;
         }
-        else if (IsFilterChar(keyinfo.KeyChar+"")) {
+        else if (IsFilterChar(keyinfo.KeyChar + "")) {
           manager.AddToFilter(keyinfo.KeyChar);
           manager.FilterNow();
           canvas.Reset();
@@ -48,8 +49,8 @@ namespace God.CLI.Common {
         canvas.Drawn(manager.Items, manager.Filter, change);
       }
       while (keyinfo.Key != ConsoleKey.Enter);
-
-      return  manager.Items.Where(item=>item.IsSelectedCurrently).ToList().First().Value;
+      console.Clear();
+      return manager.Items.Where(item => item.IsSelectedCurrently).ToList().First().OriginalContent;
     }
 
     private bool IsFilterChar(string input) {

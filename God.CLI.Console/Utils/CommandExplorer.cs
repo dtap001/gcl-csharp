@@ -22,7 +22,9 @@ namespace God.CLI.Console.Utils {
         var attributeInfo = method.GetCustomAttributes<ConsoleAppFramework.CommandAttribute>().Select(x => new GCLCommandInfo() {
           Command = string.Join(',', x.CommandNames),
           Description = x.Description,
-          ParentCommand = parentComandInfo
+          ParentCommand = parentComandInfo,
+          ClassType = method.DeclaringType,
+          MethodName = method.Name
         }).First(); //for now we are currently using one command attribute per command
 
         result.Add(attributeInfo);

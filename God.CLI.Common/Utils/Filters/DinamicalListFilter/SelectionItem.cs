@@ -1,17 +1,20 @@
+using God.CLI.Domain;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace God.CLI.Common {
-  public class SelectionItem {
-    public SelectionItem(string initialValue) {
-      SetValue(initialValue);
+  public class SelectionItem<T> where T : IToStringable {
+    public SelectionItem(T initialValue) {
+      OriginalContent = initialValue;
+      SetValue(initialValue.ToString());
     }
-    public SelectionItem(List<SelectionItemPart> selectionItemPart) {
+    public SelectionItem(List<SelectionItemPart> selectionItemPart, IToStringable originalSourceItem) {
       this.itemParts = selectionItemPart;
     }
     private List<SelectionItemPart> itemParts = new List<SelectionItemPart>();
     public bool IsSelectedPreviously { get; set; }
     public bool IsSelectedCurrently { get; set; }
+    public T OriginalContent { get; set; }
 
     public void SetValue(List<SelectionItemPart> values) {
       this.itemParts = values;
