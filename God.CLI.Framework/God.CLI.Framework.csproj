@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>  
   <ItemGroup>
     <ProjectReference Include="..\God.CLI.Domain\God.CLI.Domain.csproj" />
@@ -9,5 +9,6 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="cliwrap" Version="3.3.3" />
+    <PackageReference Include="Newtonsoft.JSON" Version="13.0.1" />
   </ItemGroup>
 </Project>

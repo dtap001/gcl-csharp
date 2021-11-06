@@ -6,5 +6,6 @@ using System.Threading.Tasks;
 namespace God.CLI.Framework {
   public interface ISystemCommandExecutor {
     Task<CommandExecutionResult> Exec(RunningContext context, string executable, List<CommandArgument> arguments);
+    Task<CommandExecutionResult> Exec(RunningContext context, string executable);
   }
 }

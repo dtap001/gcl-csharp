@@ -14,7 +14,9 @@ namespace God.CLI.Framework {
     public CliWrapSystemCommandExecutor(IConsoleIO consoleIO) {
       this.console = consoleIO;
     }
-
+    public async Task<CommandExecutionResult> Exec(RunningContext context, string executable) {
+      return await this.Exec(context, executable, new List<CommandArgument>());
+    }
     public async Task<CommandExecutionResult> Exec(RunningContext context, string executable, List<CommandArgument> arguments) {
       CommandExecutionResult result = null;
       try {
